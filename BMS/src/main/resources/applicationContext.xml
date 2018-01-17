@@ -9,13 +9,11 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     <import resource="mybatis-conf.xml"/>
-    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <!-- Single realm app.  If you have multiple realms, use the 'realms' property instead. -->
+    <!--权限控制部分-->
+    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        &lt;!&ndash; Single realm app.  If you have multiple realms, use the 'realms' property instead. &ndash;&gt;
         <property name="sessionMode" value="native"/>
-        <!--realm实际上就是用来处理用户名密码的比对-->
+        &lt;!&ndash;realm实际上就是用来处理用户名密码的比对&ndash;&gt;
         <property name="realm" ref="myRealm"/>
     </bean>
 
@@ -27,21 +25,8 @@
             </bean>
         </property>
     </bean>
-
-    <!-- =========================================================
-       Shiro Spring-specific integration
-       ========================================================= -->
-    <!-- Post processor that automatically invokes init() and destroy() methods
-         for Spring-configured Shiro objects so you don't have to
-         1) specify an init-method and destroy-method attributes for every bean
-            definition and
-         2) even know which Shiro objects require these methods to be
-            called. -->
-    <!--下面三个been用来开启注解-->
+    &lt;!&ndash;下面三个been用来开启注解&ndash;&gt;
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
-
-    <!-- Enable Shiro Annotations for Spring-configured beans.  Only run after
-         the lifecycleBeanProcessor has run: -->
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
           depends-on="lifecycleBeanPostProcessor"/>
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
@@ -62,9 +47,13 @@
                 /index.jsp=user
                 /a.jsp=roles[a]
                 /b.jsp=roles[b]
-                <!--/**=authc-->
+                /**=authc
             </value>
         </property>
+    </bean>-->
+    <!--事务部分-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
